@@ -6,10 +6,10 @@ namespace WheelDeal.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly MySqlTest _mysql;
+        private readonly UserService _mysql;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(MySqlTest mysql, ILogger<HomeController> logger)
+        public HomeController(UserService mysql, ILogger<HomeController> logger)
         {
             _mysql = mysql;
             _logger = logger;
