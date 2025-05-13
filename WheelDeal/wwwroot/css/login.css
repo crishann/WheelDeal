@@ -1,0 +1,110 @@
+/*===================================================LOGIN CSS========================================================*/
+/*.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+    flex: 1;
+}
+
+.login-card {
+    display: flex;
+    max-width: 800px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.login-info {
+    background-color: #7dc383;
+    color: white;
+    padding: 30px;
+    flex: 1;
+}
+
+    .login-info h2 {
+        margin-top: 0;
+    }
+
+.login-form {
+    flex: 1;
+    padding: 30px;
+}
+
+    .login-form h3 {
+        margin-top: 0;
+    }*/
+
+/*=============== FORM FLOATING ===============*/
+/*.form-floating {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+    .form-floating input {
+        width: 100%;
+        padding: 1rem 0.75rem 0.25rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: transparent;
+    }
+
+    .form-floating label {
+        position: absolute;
+        top: 1rem;
+        left: 0.75rem;
+        font-size: 1rem;
+        color: #777;
+        background-color: #fff;
+        padding: 0 4px;
+        pointer-events: none;
+        transition: all 0.2s ease;
+    }
+
+    .form-floating input:focus + label,
+    .form-floating input:not(:placeholder-shown) + label {
+        top: -0.5rem;
+        left: 0.6rem;
+        font-size: 0.75rem;
+        color: #333;
+    }*/
+
+/*=============== BUTTON & PROMPT ===============*/
+/*.login-btn2 {
+    background-color: #699c78;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .login-btn2:hover {
+        background-color: #5a8e67;
+    }
+
+.register-prompt {
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+    .register-prompt a {
+        color: #699c78;
+        text-decoration: none;
+    }
+
+        .register-prompt a:hover {
+            text-decoration: underline;
+        }*/
+
+/*=============== RESPONSIVE ===============*/
+/*@media (max-width: 768px) {
+    .login-card {
+        flex-direction: column;
+    }
+}*/
+/*===================================================END LOGIN CSS========================================================*/
