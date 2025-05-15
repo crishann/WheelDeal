@@ -2,6 +2,76 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
- <h2>index</h2>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar Filter -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Find your right car</h5>
+
+                    <div class="btn-group w-100 mb-3" role="group">
+                        <button type="button" class="btn btn-dark">New Car</button>
+                        <button type="button" class="btn btn-outline-dark">Used Car</button>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="searchType" id="byBudget" checked>
+                        <label class="form-check-label" for="byBudget">By Budget</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="searchType" id="byBrand">
+                        <label class="form-check-label" for="byBrand">By Brand</label>
+                    </div>
+
+                    <select class="form-select mb-2">
+                        <option selected>Select Budget</option>
+                    </select>
+                    <select class="form-select mb-3">
+                        <option selected>Vehicle Types</option>
+                    </select>
+
+                    <button class="btn btn-success w-100">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Car Listing -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">The most searched cars</h5>
+                    <!-- Category Tabs -->
+                    <ul class="nav nav-tabs mb-3">
+                        <li class="nav-item"><a class="nav-link active" href="#">SUV</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">MUV</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Sedan</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Luxury</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Hatchback</a></li>
+                    </ul>
+
+                    <!-- Card Deck of Cars -->
+                    <div class="row">
+                        @for (int i = 0; i < 3; i++)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <img src="~/cars/SUV/everest.jpg" class="card-img-top" alt="Ford Everest">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title">Ford Everest</h6>
+                                        <p class="card-text mb-4">₱1,839,000 – ₱2,580,000</p>
+                                        <button class="btn btn-success mt-auto">View Offer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="mt-3">
+                        <a href="#" class="text-decoration-none">View all SUV Cars <i class="bi bi-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
