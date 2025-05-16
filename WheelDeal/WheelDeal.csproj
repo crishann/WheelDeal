@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\" />
     <Folder Include="wwwroot\cars\SUV\" />
     <Folder Include="wwwroot\icons\" />
   </ItemGroup>
