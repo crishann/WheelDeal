@@ -1,14 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Register";
 }
+@model WheelDeal.Models.User
 
 <style>
     .full-height {
-        height: 100vh;
+        /* height: 100vh; */
+        min-height: 100%;
     }
 </style>
-
-<div class="container-fluid full-height d-flex justify-content-center align-items-center bg-light">
+<div class="container-fluid d-flex justify-content-center align-items-center py-5" style="min-height: 100%;">
     <div class="card shadow w-100" style="max-width: 800px;">
         <div class="row g-0">
             <!-- Left Panel -->
@@ -23,41 +24,49 @@
             <div class="col-md-6 p-4 d-flex flex-column justify-content-center">
                 <h3 class="mb-4">Create Account</h3>
 
-                <form method="post" onsubmit="return validatePasswords()">
+                <form method="post" asp-antiforgery="true" onsubmit="return validatePasswords()">
+                    @Html.AntiForgeryToken()
+
                     <div class="row g-2">
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required>
-                                <label for="first_name">First Name</label>
+                                <input type="text" class="form-control" asp-for="First_Name" placeholder="First Name" required>
+                                <label asp-for="First_Name">First Name</label>
+                                <div class="text-danger">@Html.ValidationMessageFor(model => model.First_Name)</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required>
-                                <label for="last_name">Last Name</label>
+                                <input type="text" class="form-control" asp-for="Last_Name" placeholder="Last Name" required>
+                                <label asp-for="Last_Name">Last Name</label>
+                                <div class="text-danger">@Html.ValidationMessageFor(model => model.Last_Name)</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-                        <label for="email">Email</label>
+                        <input type="email" class="form-control" asp-for="Email" placeholder="Email" required>
+                        <label asp-for="Email">Email</label>
+                        <div class="text-danger">@Html.ValidationMessageFor(model => model.Email)</div>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="contact" name="contact" placeholder="Contact" required>
-                        <label for="contact">Contact Number</label>
+                        <input type="text" class="form-control" asp-for="Contact" placeholder="Contact" required>
+                        <label asp-for="Contact">Contact Number</label>
+                        <div class="text-danger">@Html.ValidationMessageFor(model => model.Contact)</div>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                        <label for="password">Password</label>
+                        <input type="password" class="form-control" asp-for="Password" placeholder="Password" required>
+                        <label asp-for="Password">Password</label>
+                        <div class="text-danger">@Html.ValidationMessageFor(model => model.Password)</div>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Re-enter Password" required>
-                        <label for="confirmPassword">Re-enter Password</label>
+                        <input type="password" class="form-control" id="ConfirmPassword" name="confirmPassword" placeholder="Re-enter Password" required>
+                        <label for="ConfirmPassword">Re-enter Password</label>
                     </div>
+
 
                     <div id="passwordError" class="text-danger mb-3 d-none">Passwords do not match.</div>
 
@@ -76,8 +85,8 @@
 @section Scripts {
     <script>
         function validatePasswords() {
-            const pass = document.getElementById('password').value;
-            const confirm = document.getElementById('confirmPassword').value;
+            const pass = document.getElementById('Password').value;
+            const confirm = document.getElementById('ConfirmPassword').value;
             const error = document.getElementById('passwordError');
 
             if (pass !== confirm) {

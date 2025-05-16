@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="MySql.Data" Version="9.3.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\" />
+    <Folder Include="wwwroot\cars\hatchback\" />
+    <Folder Include="wwwroot\cars\luxury\" />
+    <Folder Include="wwwroot\cars\sedan\" />
+    <Folder Include="wwwroot\cars\pickup\" />
     <Folder Include="wwwroot\cars\SUV\" />
     <Folder Include="wwwroot\icons\" />
   </ItemGroup>
