@@ -57,15 +57,21 @@ public class AuthController : Controller
         {
             HttpContext.Session.SetString("UserEmail", user.Email);
             HttpContext.Session.SetString("UserName", user.First_Name);
+            Console.WriteLine("Login as " + user.Email);
+
+
             return RedirectToAction("Index", "Home");
         }
 
+        Console.WriteLine("Invalid username or password");
         ViewBag.Error = "Invalid username or password.";
         return View();
     }
 
     public IActionResult Logout()
     {
+        Console.WriteLine("HSession is cleare / logout");
+
         HttpContext.Session.Clear();
         return RedirectToAction("Login");
     }
