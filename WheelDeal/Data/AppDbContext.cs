@@ -7,4 +7,6 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Car> Cars { get; set; }
+
 }

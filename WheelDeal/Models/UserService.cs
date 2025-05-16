@@ -22,4 +22,10 @@ public class UserService
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
+
+    // Method to get a user by email
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
 }
