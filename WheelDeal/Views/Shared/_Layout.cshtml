@@ -42,16 +42,30 @@
                                asp-controller="NewsReviews" asp-action="newsreviews">News & Reviews</a>
                         </li>
                     </ul>
+                    @{
+                        var isLoggedIn = Context.Session.GetString("UserEmail") != null;
+                    }
+
                     <div class="d-flex">
-                        <a asp-controller="Auth" asp-action="Login"
-                           class="btn nav-btn me-2 @(currentAction == "Login" ? "active" : "")">
-                            Login
-                        </a>
-                        <a asp-controller="Auth" asp-action="Register"
-                           class="btn nav-btn @(currentAction == "Register" ? "active" : "")">
-                            Register
-                        </a>
+                        @if (isLoggedIn)
+                        {
+                            <form method="post" asp-controller="Auth" asp-action="Logout" class="d-inline">
+                                <button type="submit" class="btn nav-btn">Logout</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-controller="Auth" asp-action="Login"
+                               class="btn nav-btn me-2 @(currentAction == "Login" ? "active" : "")">
+                                Login
+                            </a>
+                            <a asp-controller="Auth" asp-action="Register"
+                               class="btn nav-btn @(currentAction == "Register" ? "active" : "")">
+                                Register
+                            </a>
+                        }
                     </div>
+
                 </div>
             </div>
         </nav>

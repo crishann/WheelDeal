@@ -39,6 +39,9 @@ namespace WheelDeal
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
+            builder.Services.AddSession();
+            builder.Services.AddDistributedMemoryCache(); // Required
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -53,6 +56,9 @@ namespace WheelDeal
                 // Development environment configurations
                 app.UseDeveloperExceptionPage(); // Show detailed errors during development
             }
+            
+
+            app.UseSession();
 
             // Set up middleware pipeline
             app.UseHttpsRedirection(); // Redirect HTTP to HTTPS

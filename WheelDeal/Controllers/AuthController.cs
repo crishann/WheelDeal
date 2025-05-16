@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WheelDeal.Models;
-using Microsoft.EntityFrameworkCore; // For EF Core methods like `FirstOrDefaultAsync`
-using BCrypt.Net;  // Ensure this is at the top of your file
+using Microsoft.AspNetCore.Http;
+using BCrypt.Net;
 
 public class AuthController : Controller
 {
@@ -10,11 +10,6 @@ public class AuthController : Controller
     public AuthController(UserService userService)
     {
         _userService = userService;
-    }
-
-    public IActionResult Login()
-    {
-        return View();
     }
 
     [HttpGet]
@@ -29,23 +24,51 @@ public class AuthController : Controller
         if (user.Password != confirmPassword)
         {
             ModelState.AddModelError("Password", "Passwords do not match.");
-            return View(user); // Return to the registration page
+            return View(user);
         }
 
-        // Check if email already exists using the UserService
         if (await _userService.EmailExistsAsync(user.Email))
         {
             ModelState.AddModelError("Email", "Email is already registered.");
-            return View(user); // Return to the registration page
+            return View(user);
         }
 
-        // Hash the password before storing it using BCrypt
-        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password); // Correct syntax for BCrypt.Net-Next
-                                                                       // This should work now
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-        // Save user to the database using UserService
         await _userService.AddUserAsync(user);
 
-        return RedirectToAction("Login"); // Redirect to the Login page after successful registration
+        return RedirectToAction("Login");
     }
+
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> Login(string username, string password)
+    {
+        var user = await _userService.GetUserByEmailAsync(username);
+
+        if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+        {
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("UserName", user.First_Name);
+            return RedirectToAction("Index", "Home");
+        }
+
+        ViewBag.Error = "Invalid username or password.";
+        return View();
+    }
+
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return RedirectToAction("Login");
+    }
+
+
 }
