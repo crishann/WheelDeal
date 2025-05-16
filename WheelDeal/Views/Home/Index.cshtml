@@ -2,26 +2,55 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .custom-radio:checked {
+        background-color: #4f805f;
+        border-color: #4f805f;
+    }
+
+    .custom-radio {
+        border: 2px solid #4f805f;
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    .form-check-input:focus {
+        box-shadow: none;
+    }
+
+    .btn-active {
+        background-color: #212529 !important;
+        color: white !important;
+        border-color: #212529 !important;
+    }
+</style>
+
 <div class="container mt-4">
     <div class="row">
         <!-- Sidebar Filter -->
         <div class="col-md-3 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold">Find Your Right car</h5>
+                    <h5 class="card-title fw-bold">Find your right car</h5>
 
-                    <div class="btn-group w-100 mb-3" role="group">
-                        <button type="button" class="btn btn-dark">New Car</button>
-                        <button type="button" class="btn btn-outline-dark">Used Car</button>
+                    <div class="btn-group w-100 mb-3" role="group" id="carTypeToggle">
+                        <button type="button" class="btn btn-outline-dark" id="newCarBtn">New Car</button>
+                        <button type="button" class="btn btn-outline-dark" id="usedCarBtn">Used Car</button>
                     </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="searchType" id="byBudget" checked>
-                        <label class="form-check-label" for="byBudget">By Budget</label>
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="searchType" id="byBrand">
-                        <label class="form-check-label" for="byBrand">By Brand</label>
+                    <div class="d-flex gap-4 mb-3" id="radioGroup">
+                        <div class="form-check">
+                            <input class="form-check-input custom-radio" type="radio" name="searchType" id="budgetRadio">
+                            <label class="form-check-label text-secondary fw-semibold" for="budgetRadio">
+                                By Budget
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input custom-radio" type="radio" name="searchType" id="brandRadio">
+                            <label class="form-check-label text-secondary fw-semibold" for="brandRadio">
+                                By Brand
+                            </label>
+                        </div>
                     </div>
 
                     <select class="form-select mb-2">
@@ -40,8 +69,8 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold">The Most Searched Cars</h5>
-                    <!-- Category Tabs -->
+                    <h5 class="card-title fw-bold">The most searched cars</h5>
+
                     <ul class="nav nav-tabs mb-3">
                         <li class="nav-item"><a class="nav-link active" href="#">SUV</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">MUV</a></li>
@@ -50,13 +79,12 @@
                         <li class="nav-item"><a class="nav-link" href="#">Hatchback</a></li>
                     </ul>
 
-                    <!-- Card Deck of Cars -->
                     <div class="row">
                         @for (int i = 0; i < 3; i++)
                         {
                             <div class="col-md-4 mb-3">
                                 <div class="card h-100">
-                                    <img src="~/cars/SUV/everest.jpg" class="card-img-top" alt="Ford Everest">
+                                    <img src="~/cars/SUV/ford-everest.jpg" class="card-img-top" alt="Ford Everest">
                                     <div class="card-body d-flex flex-column">
                                         <h6 class="card-title">Ford Everest</h6>
                                         <p class="card-text mb-4">₱1,839,000 – ₱2,580,000</p>
@@ -76,4 +104,52 @@
     </div>
 </div>
 
-<br />
+<script>
+    const newCarBtn = document.getElementById("newCarBtn");
+    const usedCarBtn = document.getElementById("usedCarBtn");
+    let activeBtn = null;
+
+    const radioButtons = document.querySelectorAll('input[name="searchType"]');
+    let lastChecked = null;
+
+    // Toggle New/Used car buttons
+    [newCarBtn, usedCarBtn].forEach(btn => {
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (activeBtn === btn) {
+                btn.classList.remove("btn-active");
+                activeBtn = null;
+            } else {
+                newCarBtn.classList.remove("btn-active");
+                usedCarBtn.classList.remove("btn-active");
+                btn.classList.add("btn-active");
+                activeBtn = btn;
+            }
+        });
+    });
+
+    // Toggle radio button behavior
+    radioButtons.forEach(radio => {
+        radio.addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (lastChecked === this) {
+                this.checked = false;
+                lastChecked = null;
+            } else {
+                lastChecked = this;
+            }
+        });
+    });
+
+    // Clear everything when clicking outside
+    document.addEventListener("click", function () {
+        // Reset car buttons
+        newCarBtn.classList.remove("btn-active");
+        usedCarBtn.classList.remove("btn-active");
+        activeBtn = null;
+
+        // Uncheck all radios
+        radioButtons.forEach(r => r.checked = false);
+        lastChecked = null;
+    });
+</script>

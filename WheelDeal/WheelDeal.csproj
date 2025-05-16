@@ -14,11 +14,6 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\" />
-    <Folder Include="wwwroot\cars\hatchback\" />
-    <Folder Include="wwwroot\cars\luxury\" />
-    <Folder Include="wwwroot\cars\sedan\" />
-    <Folder Include="wwwroot\cars\pickup\" />
-    <Folder Include="wwwroot\cars\SUV\" />
     <Folder Include="wwwroot\icons\" />
   </ItemGroup>
 
