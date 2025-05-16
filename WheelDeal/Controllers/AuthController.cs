@@ -34,7 +34,7 @@ public class AuthController : Controller
         }
 
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
+        Console.WriteLine("Invalid username or password");
         await _userService.AddUserAsync(user);
 
         return RedirectToAction("Login");
