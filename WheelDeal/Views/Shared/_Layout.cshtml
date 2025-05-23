@@ -1,6 +1,8 @@
 ﻿@{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+
 }
 
 
@@ -28,43 +30,45 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link @(currentController == "NewCar" ? "active text-white" : "")"
-                               asp-controller="NewCar" asp-action="newcar">New Car</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(currentController == "UsedCar" ? "active text-white" : "")"
-                               asp-controller="UsedCar" asp-action="usedcar">Used Car</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(currentController == "NewsReviews" ? "active text-white" : "")"
-                               asp-controller="NewsReviews" asp-action="newsreviews">News & Reviews</a>
-                        </li>
-                    </ul>
-                    @{
-                        var isLoggedIn = Context.Session.GetString("UserEmail") != null;
+                    @if (isLoggedIn)
+                    {
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link @(currentController == "NewCar" ? "active text-white" : "")"
+                                                     asp-controller="NewCar" asp-action="newcar">New Car</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(currentController == "UsedCar" ? "active text-white" : "")"
+                                                     asp-controller="UsedCar" asp-action="usedcar">Used Car</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(currentController == "NewsReviews" ? "active text-white" : "")"
+                                                     asp-controller="NewsReviews" asp-action="newsreviews">News & Reviews</a>
+                            </li>
+                        </ul>
                     }
-
-                    <div class="d-flex">
-                        @if (isLoggedIn)
-                        {
+                    @if (isLoggedIn)
+                    {
+                        <div class="d-flex ms-auto align-items-center">
+                            @* --- MODIFIED SECTION START --- *@
+                            <a class="nav-link text-white me-3" asp-controller="User" asp-action="UserProfile">
+                                Hello, @User.Identity.Name
+                            </a>
+                            @* --- MODIFIED SECTION END --- *@
                             <form method="post" asp-controller="Auth" asp-action="Logout" class="d-inline">
                                 <button type="submit" class="btn nav-btn">Logout</button>
                             </form>
-                        }
-                        else
-                        {
-                            <a asp-controller="Auth" asp-action="Login"
-                               class="btn nav-btn me-2 @(currentAction == "Login" ? "active" : "")">
-                                Login
-                            </a>
-                            <a asp-controller="Auth" asp-action="Register"
-                               class="btn nav-btn @(currentAction == "Register" ? "active" : "")">
-                                Register
-                            </a>
-                        }
-                    </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex ms-auto">
+                            <a asp-controller="Auth" asp-action="Login" class="btn nav-btn me-2 @(currentAction == "Login" ? "active" : "")">Login</a>
+                            <a asp-controller="Auth" asp-action="Register" class="btn nav-btn @(currentAction == "Register" ? "active" : "")">Register</a>
+                        </div>
+                    }
+
+
 
                 </div>
             </div>

@@ -1,0 +1,116 @@
+﻿@model WheelDeal.Models.Car // Declare the model type for the view
+@{
+    ViewData["Title"] = "List Your Car for Sale";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-success">List Your Car for Sale</h2>
+
+    <div class="card shadow p-4 mb-5 bg-white rounded">
+        <div class="card-body">
+            <form asp-controller="User" asp-action="SellCar" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Listing Title</label>
+                    <input asp-for="Title" class="form-control" placeholder="e.g., 2020 Honda Civic for Sale" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Brand" class="form-label">Brand (e.g., Toyota)</label>
+                        <input asp-for="Brand" class="form-control" />
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Model" class="form-label">Model (e.g., Camry)</label>
+                        <input asp-for="Model" class="form-control" />
+                        <span asp-validation-for="Model" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Year" class="form-label">Year</label>
+                        <input asp-for="Year" type="number" class="form-control" />
+                        <span asp-validation-for="Year" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Condition" class="form-label">Condition</label>
+                        <select asp-for="Condition" class="form-select">
+                            <option value="">-- Select Condition --</option>
+                            <option value="New">New</option>
+                            <option value="Used">Used</option>
+                            <option value="Certified Used">Certified Used</option>
+                        </select>
+                        <span asp-validation-for="Condition" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Mileage" class="form-label">Mileage (in kilometers)</label>
+                        <input asp-for="Mileage" type="number" class="form-control" />
+                        <span asp-validation-for="Mileage" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FuelType" class="form-label">Fuel Type</label>
+                        <select asp-for="FuelType" class="form-select">
+                            <option value="">-- Select Fuel Type --</option>
+                            <option value="Gasoline">Gasoline</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                        <span asp-validation-for="FuelType" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Transmission" class="form-label">Transmission</label>
+                        <select asp-for="Transmission" class="form-select">
+                            <option value="">-- Select Transmission --</option>
+                            <option value="Automatic">Automatic</option>
+                            <option value="Manual">Manual</option>
+                        </select>
+                        <span asp-validation-for="Transmission" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Price" class="form-label">Price (PHP)</label>
+                        <input asp-for="Price" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Location" class="form-label">Location (e.g., Cebu City, Cebu)</label>
+                    <input asp-for="Location" class="form-control" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="uploadedImages" class="form-label">Upload Car Images</label>
+                    <input type="file" name="uploadedImages" id="uploadedImages" multiple class="form-control" accept="image/*" />
+                    @* This displays validation errors for the uploadedImages parameter *@
+                    @Html.ValidationMessage("uploadedImages", new { @class = "text-danger" })
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg mt-3">List Car</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

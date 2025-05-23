@@ -2,6 +2,11 @@
 using WheelDeal.Models;
 using Microsoft.AspNetCore.Http;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using WheelDeal.Services; // <--- ADD THIS LINE to resolve UserService not found
 
 public class AuthController : Controller
 {
@@ -34,9 +39,10 @@ public class AuthController : Controller
         }
 
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-        Console.WriteLine("Invalid username or password");
+        // Console.WriteLine("Invalid username or password"); // This line doesn't make sense here, remove or change it
         await _userService.AddUserAsync(user);
 
+        TempData["Message"] = "Registration successful! Please log in."; // Add a success message
         return RedirectToAction("Login");
     }
 
@@ -47,34 +53,48 @@ public class AuthController : Controller
     }
 
 
-
     [HttpPost]
-    public async Task<IActionResult> Login(string username, string password)
+    public async Task<IActionResult> Login(string email, string password) // Changed username to email for consistency
     {
-        var user = await _userService.GetUserByEmailAsync(username);
+        var user = await _userService.GetUserByEmailAsync(email); // Use GetUserByEmailAsync
 
         if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
-            HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("UserName", user.First_Name);
-            Console.WriteLine("Login as " + user.Email);
+            // Create claims including the user role
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // Store user ID
+                new Claim(ClaimTypes.Name, user.Email),                  // Store email as principal name
+                new Claim(ClaimTypes.GivenName, user.First_Name),        // Store first name
+                new Claim(ClaimTypes.Role, user.Role)                    // Critical for Authorize with roles
+            };
 
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // Sign in the user
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+            Console.WriteLine($"Login as {user.Email} with role {user.Role}"); // Use string interpolation
 
             return RedirectToAction("Index", "Home");
         }
 
-        Console.WriteLine("Invalid username or password");
-        ViewBag.Error = "Invalid username or password.";
+        Console.WriteLine("Invalid email or password"); // Changed username to email
+        ViewBag.Error = "Invalid email or password.";   // Changed username to email
         return View();
     }
 
-    public IActionResult Logout()
+    [Authorize] // Only authenticated users can logout
+    public async Task<IActionResult> Logout() // Made async because HttpContext.SignOutAsync is async
     {
-        Console.WriteLine("HSession is cleare / logout");
+        // Sign out the user
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-        HttpContext.Session.Clear();
+        // HttpContext.Session.Clear(); // Only if you are actively using session for user authentication data
+        // (less common with cookie authentication for identity)
+
+        Console.WriteLine("User logged out.");
+
         return RedirectToAction("Login");
     }
-
-
 }

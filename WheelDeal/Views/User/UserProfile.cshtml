@@ -1,0 +1,108 @@
+﻿@model WheelDeal.Models.User // Declare the model type for the view
+@{
+    ViewData["Title"] = @Model?.Email ?? "User Profile"; // Display user's email or a default title
+
+    // Determine if the page is in edit mode based on a query parameter
+    var isEditMode = Context.Request.Query["edit"].ToString() == "true";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-success">User Profile</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow p-4 mb-5 bg-white rounded">
+        <div class="card-body">
+            @* The form is only for POSTing updates, so it's only active in edit mode *@
+            <form asp-controller="User" asp-action="UserProfile" method="post" class="@(isEditMode ? "" : "d-none")">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                @* Hidden field for Id, crucial for updates *@
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Role" /> @* Keep role hidden and unchanged via this form *@
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="First_Name" class="form-label">First Name</label>
+                        <input asp-for="First_Name" class="form-control" />
+                        <span asp-validation-for="First_Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Last_Name" class="form-label">Last Name</label>
+                        <input asp-for="Last_Name" class="form-control" />
+                        <span asp-validation-for="Last_Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email Address</label>
+                    <input asp-for="Email" class="form-control" type="email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Contact" class="form-label">Contact Number</label>
+                    <input asp-for="Contact" class="form-control" type="tel" />
+                    <span asp-validation-for="Contact" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Password" class="form-label">New Password (leave blank to keep current)</label>
+                    <input asp-for="Password" class="form-control" type="password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <small class="form-text text-muted">Leave blank if you don't want to change your password.</small>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg">Update Profile</button>
+            </form>
+
+            @* Display mode: only visible when not in edit mode *@
+            <div class="@(isEditMode ? "d-none" : "")">
+                <div class="mb-3">
+                    <strong>First Name:</strong> @Model.First_Name
+                </div>
+                <div class="mb-3">
+                    <strong>Last Name:</strong> @Model.Last_Name
+                </div>
+                <div class="mb-3">
+                    <strong>Email Address:</strong> @Model.Email
+                </div>
+                <div class="mb-3">
+                    <strong>Contact Number:</strong> @Model.Contact
+                </div>
+                <div class="mb-3">
+                    <strong>Role:</strong> @Model.Role
+                </div>
+
+                @* Button to switch to edit mode *@
+                <a asp-controller="User" asp-action="UserProfile" asp-route-edit="true" class="btn btn-success btn-lg">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Optional: If you want to ensure validation scripts are loaded even in view mode
+        // and then hide the form, you might need more complex JS logic.
+        // For simplicity, we just hide the form (which contains validation spans).
+        // If validation messages persist after a failed update, they will show when form becomes visible.
+    </script>
+}

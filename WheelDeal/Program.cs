@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using WheelDeal.Models;
+using WheelDeal.Services; // <--- ADD THIS LINE to resolve UserService not found
 
 namespace WheelDeal
 {
@@ -11,15 +13,15 @@ namespace WheelDeal
             var builder = WebApplication.CreateBuilder(args);
 
             // Register UserService to be injected into constructors
-            builder.Services.AddScoped<UserService>(); // Use Scoped lifetime for UserService
+            builder.Services.AddScoped<UserService>(); // This line (15) needs UserService to be found
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews(); // Register MVC controllers and views
+            builder.Services.AddControllersWithViews();
 
             // Register DbContext (AppDbContext) with MySQL connection
-            builder.Services.AddDbContext<AppDbContext>(options =>
+            builder.Services.AddDbContext<AppDbContext>(options => // AppDbContext also needs a using directive if not in this namespace
                 options.UseMySql(
-                    builder.Configuration.GetConnectionString("DefaultConnection"), // Fetch connection string from appsettings.json
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
                     new MySqlServerVersion(new Version(8, 0, 36)) // Specify MySQL server version (adjust as per your setup)
                 )
             );
@@ -29,8 +31,16 @@ namespace WheelDeal
             {
                 options.Secure = CookieSecurePolicy.Always; // Ensure cookies are always sent over HTTPS
                 options.MinimumSameSitePolicy = SameSiteMode.Strict;
-                // Restrict cookies to same-site requests
             });
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Auth/Login";
+                options.AccessDeniedPath = "/Auth/AccessDenied";
+            });
+
+            builder.Services.AddAuthorization();
+
 
             // Register antiforgery configuration to use secure cookies with SameSite attribute
             builder.Services.AddAntiforgery(options =>
@@ -41,6 +51,14 @@ namespace WheelDeal
 
             builder.Services.AddSession();
             builder.Services.AddDistributedMemoryCache(); // Required
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
 
             var app = builder.Build();
 
@@ -56,7 +74,7 @@ namespace WheelDeal
                 // Development environment configurations
                 app.UseDeveloperExceptionPage(); // Show detailed errors during development
             }
-            
+
 
             app.UseSession();
 
@@ -65,13 +83,13 @@ namespace WheelDeal
             app.UseStaticFiles(); // Serve static files (CSS, JS, images, etc.)
 
             app.UseRouting(); // Enable routing
-
+            app.UseAuthentication();
             app.UseAuthorization(); // Enable Authorization middleware (required for protected routes)
 
             // Define MVC routing pattern
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}" // Default route setup
+                pattern: "{controller=Auth}/{action=Login}/{id?}" // Default route setup
             );
 
             // Start the application
